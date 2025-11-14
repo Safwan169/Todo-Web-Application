@@ -1,10 +1,13 @@
-// app/(protected)/profile/page.tsx - placeholder
-import React from 'react';
+'use client';
+
+import { useProfile } from "@/modules/profile/hooks";
 
 const page = () => {
+    const { data, isLoading, isError } = useProfile();
+    console.log(data, 'profile data');
     return (
         <div>
-            
+            this is profile page
         </div>
     );
 };

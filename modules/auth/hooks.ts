@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { loginApi, signupApi, profileApi } from "./api";
+import { loginApi, signupApi } from "./api";
 import { useAuthContext } from "@/context/AuthContext";
 import { LoginSchema, SignupSchema } from "./validations";
 
@@ -20,9 +20,4 @@ export const useSignup = () => {
   });
 };
 
-export const useProfile = () => {
-  return useQuery({
-    queryKey: ["profile"],
-    queryFn: profileApi,
-  });
-};
+

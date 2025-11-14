@@ -8,11 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginSchema, LoginSchema } from "@/modules/auth/validations";
+import { useRouter } from "next/navigation";
+import { useLogin } from "@/modules/auth/hooks";
+import { setToken } from "@/lib/cookies";
 
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter();
+  const { mutate: login, isPending } = useLogin();
   const {
     register,
     handleSubmit,
@@ -22,7 +26,16 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginSchema) => {
-    console.log("LOGIN FORM SUBMITTED:", data);
+
+    login(data, {
+      onSuccess: (response: any) => {
+        console.log(response, 'response login');
+        localStorage.setItem("access_token", response.access);
+        localStorage.setItem("refresh_token", response.refresh);
+        router.push("/profile");
+      },
+    });
+
   };
 
   return (
