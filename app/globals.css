@@ -29,5 +29,7 @@ body {
 @theme {
   --color-primary: #5272FF;
   --color-secondary: #E2ECF8;
+  --color-tertiary: #FFFFFF ;
+
   
 }
