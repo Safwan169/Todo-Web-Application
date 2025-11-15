@@ -1,12 +1,21 @@
-// app/(protected)/todo/components/TodoHeader.tsx
-
+'use client';
+import AddTaskModal from '@/components/ui/modal';
 import { Plus } from 'lucide-react';
+import { useState } from 'react';
 
 interface TodoHeaderProps {
   onNewTask: () => void;
 }
 
+
 export default function TodoHeader({ onNewTask }: TodoHeaderProps) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSubmit = async (data: any) => {
+    console.log('Form Data:', data);
+    // Call your API here
+    // await createTask(data);
+  };
   return (
     <div className="flex items-center justify-between mb-6">
       {/* Title */}
@@ -17,12 +26,17 @@ export default function TodoHeader({ onNewTask }: TodoHeaderProps) {
 
       {/* New Task Button */}
       <button
-        onClick={onNewTask}
-        className="flex items-center  gap-2 px-3 py-3 bg-primary hover:bg-blue-700 text-white font-normal text-[16px] rounded-lg transition-colors shadow-sm"
+        onClick={() => setIsModalOpen(true)}
+        className="flex items-center  gap-2 px-3 py-2 bg-primary hover:bg-blue-700 text-white font-normal text-[16px] rounded-lg transition-colors shadow-sm"
       >
         <Plus className="w-4 h-4" />
         New Task
       </button>
+        <AddTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }
