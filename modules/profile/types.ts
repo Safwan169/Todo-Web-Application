@@ -1,1 +1,9 @@
-// modules/profile/types.ts - placeholder
+interface ProfileFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address: string;
+  contactNumber: string;
+  birthday: string;
+}
+
