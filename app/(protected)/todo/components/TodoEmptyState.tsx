@@ -1,8 +1,6 @@
-// app/(protected)/todo/components/TodoEmptyState.tsx
-
 export default function TodoEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-20">
+    <div className="flex flex-col  bg-white rounded-xl border border-gray-200 min-h-[500px] p-6 items-center justify-center py-20">
       {/* Illustration */}
       <div className="relative w-64 h-64 mb-6">
         {/* Background Cards */}
@@ -58,8 +56,6 @@ export default function TodoEmptyState() {
           </svg>
         </div>
       </div>
-
-      {/* Text */}
       <p className="text-2xl font-normal text-[#201F1E]">No todos yet</p>
     </div>
   );

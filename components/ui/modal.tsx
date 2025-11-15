@@ -99,7 +99,7 @@ export default function AddTaskModal({
                                         minLength: { value: 3, message: "At least 3 characters" },
                                     })}
                                     className={`w-full px-3 py-2 rounded-md border ${errors.title ? "border-red-500" : "border-gray-300"
-                                        } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-black`}
+                                        } focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-black`}
                                 />
                                 {errors.title && (
                                     <p className="mt-1 text-xs text-red-600">
@@ -122,7 +122,7 @@ export default function AddTaskModal({
                                         type="date"
                                         {...register("date", { required: "Date is required" })}
                                         className={`w-full px-3 py-2 pr-2 rounded-md border ${errors.date ? "border-red-500" : "border-gray-300"
-                                            } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-black`}
+                                            } focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-black`}
                                     />
                                 </div>
                                 {errors.date && (
@@ -231,7 +231,7 @@ export default function AddTaskModal({
                                     placeholder="Start writing here...."
                                     rows={5}
                                     className={`w-full px-3 py-2 rounded-md border ${errors.description ? "border-red-500" : "border-gray-300"
-                                        } resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-black placeholder-gray-400`}
+                                        } resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-black placeholder-gray-400`}
                                 />
                                 {errors.description && (
                                     <p className="mt-1 text-xs text-red-600">
@@ -246,7 +246,7 @@ export default function AddTaskModal({
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="px-7 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-7 py-2 rounded-lg bg-primary hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? "Saving..." : "Done"}
                             </button>

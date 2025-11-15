@@ -1,13 +1,11 @@
-// app/(protected)/todo/page.tsx
-
 'use client';
-
 import { useState } from 'react';
 import TodoHeader from './components/TodoHeader';
 import TodoSearch from './components/TodoSearch';
 import TodoFilter from './components/TodoFilter';
 import TodoEmptyState from './components/TodoEmptyState';
-// import TodoList from './components/TodoList'; // You already have this
+import { TaskList } from './components/TodoCard';
+
 
 export default function TodoPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,17 +16,17 @@ export default function TodoPage() {
     { label: 'Expires in 30 days', value: '30days', checked: false },
   ]);
 
-  // Your todos data (replace with actual data from API/state)
-  const todos = []; // Empty for now to show empty state
+
+  const todos = []; 
 
   const handleNewTask = () => {
-    // Open modal or navigate to create task
+    
     console.log('Opening new task form...');
   };
 
   const handleSearch = () => {
     console.log('Searching for:', searchQuery);
-    // Implement search logic here
+  
   };
 
   const handleFilterChange = (value: string, checked: boolean) => {
@@ -58,13 +56,12 @@ export default function TodoPage() {
         </div>
 
         {/* Content Area */}
-        <div className="bg-white rounded-xl border border-gray-200 min-h-[500px] p-6">
-          {todos.length === 0 ? (
+        <div className=" min-h-[500px] ">
+          {todos.length === 1 ? (
             <TodoEmptyState />
           ) : (
-            <div>
-              {/* Your TodoList component will go here */}
-              {/* <TodoList todos={todos} /> */}
+            <div className='bg-transparent'>
+           <TaskList/>
             </div>
           )}
         </div>

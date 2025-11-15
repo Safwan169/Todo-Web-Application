@@ -1,5 +1,3 @@
-// app/(protected)/todo/components/TodoSearch.tsx
-
 import { Search } from 'lucide-react';
 
 interface TodoSearchProps {

@@ -11,3 +11,20 @@ interface AddTaskModalProps {
     onClose: () => void;
     onSubmit: (data: TaskFormData) => Promise<void> | void;
 }
+
+type Priority = 'extreme' | 'moderate' | 'low';
+
+interface Task {
+    id: string;
+    title: string;
+    description: string;
+    dueDate: string;
+    priority: Priority;
+}
+
+interface TaskCardProps {
+    task: Task;
+    onEdit: (task: Task) => void;
+    onDelete: (taskId: string) => void;
+    isDragging?: boolean;
+}
