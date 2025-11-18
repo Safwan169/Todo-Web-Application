@@ -1,28 +1,29 @@
-// modules/todo/types.ts - placeholder
-interface TaskFormData {
+export interface TaskFormData {
     title: string;
     date: string;
     priority: "extreme" | "moderate" | "low";
     description: string;
 }
 
-interface AddTaskModalProps {
+export interface AddTaskModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: TaskFormData) => Promise<void> | void;
 }
 
-type Priority = 'extreme' | 'moderate' | 'low';
+export type Priority = 'extreme' | 'moderate' | 'low';
 
-interface Task {
+export interface Task {
     id: string;
     title: string;
     description: string;
-    dueDate: string;
+    todo_date: string;
     priority: Priority;
+    is_completed: boolean;
+    position: number;
 }
 
-interface TaskCardProps {
+export interface TaskCardProps {
     task: Task;
     onEdit: (task: Task) => void;
     onDelete: (taskId: string) => void;

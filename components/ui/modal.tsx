@@ -1,28 +1,43 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { TaskFormData } from "@/modules/todo/types";
+import { showToast } from "@/lib/toast";
 
 
 
 interface AddTaskModalProps {
+    title: string;
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: TaskFormData) => Promise<void> | void;
+    onSubmit?: (data: TaskFormData) => Promise<void> | void;
+    initialData?: TaskFormData;
 }
 
 export default function AddTaskModal({
+    title,
     isOpen,
     onClose,
     onSubmit,
+    initialData,
 }: AddTaskModalProps) {
     const {
         register,
         handleSubmit,
         control,
         reset,
+        setValue,
+        watch,
+        getValues,
         formState: { errors, isSubmitting },
     } = useForm<TaskFormData>({
-        defaultValues: {
+        defaultValues: initialData ? {
+            title: initialData.title || "",
+            date: initialData.date || "",
+            priority: initialData.priority,
+            description: initialData.description || "",
+        } : {
             title: "",
             date: "",
             priority: undefined,
@@ -30,13 +45,112 @@ export default function AddTaskModal({
         },
     });
 
+   // Watch priority value for debugging
+    const priorityValue = watch("priority");
+    const [isFormReady, setIsFormReady] = useState(false);
+    const [hasInitialized, setHasInitialized] = useState(false);
+    
+    // Update form only when modal first opens
+    useEffect(() => {
+        if (isOpen && !hasInitialized) {
+            setIsFormReady(false);
+            if (initialData) {
+                console.log('Setting initialData in modal:', initialData);
+                // Reset form with initial data - this will update all fields including priority
+                const formValues = {
+                    title: initialData.title || "",
+                    date: initialData.date || "",
+                    priority: initialData.priority as "extreme" | "moderate" | "low" | undefined,
+                    description: initialData.description || "",
+                };
+                console.log('Resetting form with values:', formValues);
+                reset(formValues, { keepDefaultValues: false });
+                
+                // Force priority update after a brief delay to ensure Controller is mounted
+                if (initialData.priority) {
+                    setTimeout(() => {
+                        console.log('Force setting priority to:', initialData.priority);
+                        setValue("priority", initialData.priority as "extreme" | "moderate" | "low", { 
+                            shouldValidate: true,
+                            shouldDirty: false,
+                            shouldTouch: false
+                        });
+                        setIsFormReady(true);
+                        setHasInitialized(true);
+                    }, 50);
+                } else {
+                    setIsFormReady(true);
+                    setHasInitialized(true);
+                }
+            } else {
+                reset({
+                    title: "",
+                    date: "",
+                    priority: undefined,
+                    description: "",
+                });
+                setIsFormReady(true);
+                setHasInitialized(true);
+            }
+        } else if (!isOpen) {
+            // Reset initialization flag when modal closes
+            setIsFormReady(false);
+            setHasInitialized(false);
+        }
+    }, [isOpen, hasInitialized]);
     const onSubmitForm = async (data: TaskFormData) => {
+        if (!onSubmit) {
+            console.warn("onSubmit is not provided");
+            return;
+        }
+        
+        // Wait for form to be ready if it's an update
+        if (initialData && !isFormReady) {
+            console.warn("Form is not ready yet, waiting...");
+            showToast.error("Please wait, form is still loading...");
+            return;
+        }
+        
         try {
-            await onSubmit(data);
-            reset();
+            console.log("Modal form submitted with data:", data);
+            console.log("Priority value from form:", data.priority);
+            console.log("Watched priority value:", priorityValue);
+            console.log("InitialData priority:", initialData?.priority);
+            console.log("All form values:", { ...data });
+            
+            // Get the current form values including priority - use getValues for most up-to-date
+            const allFormValues = getValues();
+            console.log("Current watched values:", watch());
+            console.log("All form values from getValues:", allFormValues);
+            
+            // Ensure priority is set - check multiple sources in order of reliability
+            let priorityToSubmit = allFormValues.priority || data.priority || priorityValue || initialData?.priority;
+            
+            console.log("Final priority to submit:", priorityToSubmit);
+            
+            if (!priorityToSubmit) {
+                console.error("Priority is missing from all sources!");
+                showToast.error("Please select a priority");
+                return;
+            }
+            
+            // Create a complete data object with priority
+            const completeData: TaskFormData = {
+                title: data.title,
+                date: data.date,
+                priority: priorityToSubmit as "extreme" | "moderate" | "low",
+                description: data.description,
+            };
+            
+            console.log("Submitting with complete data:", completeData);
+            await onSubmit(completeData);
+            if (!initialData) {
+                reset();
+            }
             onClose();
         } catch (err) {
             console.error("Submit error:", err);
+            // Don't close modal on error so user can see the error and retry
         }
     };
 
@@ -65,7 +179,7 @@ export default function AddTaskModal({
                     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                         <div className="flex flex-col gap-1">
                             <h2 className="text-base font-semibold text-[16px] text-black">
-                                Add New Task
+                                {title}
                             </h2>
                             <span className='bg-primary h-0.5  w-16'></span>
 
@@ -73,7 +187,7 @@ export default function AddTaskModal({
                         <button
                             onClick={onClose}
                             type="button"
-                            className="text-sm font-medium text-black underline underline-offset-3 decoration-gray-400 hover:text-gray-700"
+                            className="text-sm font-medium cursor-pointer text-black underline underline-offset-3 decoration-gray-400 hover:text-gray-700"
                         >
                             Go Back
                         </button>
@@ -141,7 +255,9 @@ export default function AddTaskModal({
                                     name="priority"
                                     control={control}
                                     rules={{ required: "Please select a priority" }}
-                                    render={({ field }) => (
+                                    render={({ field }) => {
+                                        console.log('Priority Controller field value:', field.value, 'initialData priority:', initialData?.priority);
+                                        return (
                                         <>
                                             <div className="flex items-center gap-5">
                                                 {/* Extreme */}
@@ -150,7 +266,10 @@ export default function AddTaskModal({
                                                         type="radio"
                                                         value="extreme"
                                                         checked={field.value === "extreme"}
-                                                        onChange={() => field.onChange("extreme")}
+                                                        onChange={(e) => {
+                                                            console.log('Setting priority to extreme');
+                                                            field.onChange(e.target.value);
+                                                        }}
                                                         className="sr-only"
                                                     />
                                                     <span
@@ -170,7 +289,10 @@ export default function AddTaskModal({
                                                         type="radio"
                                                         value="moderate"
                                                         checked={field.value === "moderate"}
-                                                        onChange={() => field.onChange("moderate")}
+                                                        onChange={(e) => {
+                                                            console.log('Setting priority to moderate');
+                                                            field.onChange(e.target.value);
+                                                        }}
                                                         className="sr-only"
                                                     />
                                                     <span
@@ -190,7 +312,10 @@ export default function AddTaskModal({
                                                         type="radio"
                                                         value="low"
                                                         checked={field.value === "low"}
-                                                        onChange={() => field.onChange("low")}
+                                                        onChange={(e) => {
+                                                            console.log('Setting priority to low');
+                                                            field.onChange(e.target.value);
+                                                        }}
                                                         className="sr-only"
                                                     />
                                                     <span
@@ -210,7 +335,8 @@ export default function AddTaskModal({
                                                 </p>
                                             )}
                                         </>
-                                    )}
+                                        );
+                                    }}
                                 />
                             </div>
 
@@ -246,14 +372,14 @@ export default function AddTaskModal({
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="px-7 py-2 rounded-lg bg-primary hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-7 py-2 rounded-lg cursor-pointer bg-primary hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? "Saving..." : "Done"}
                             </button>
                             <button
                                 type="button"
                                 onClick={handleClear}
-                                className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
+                                className="flex items-center  cursor-pointer justify-center w-10 h-10 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
                                 aria-label="Clear form"
                             >
                                 <Trash2 className="w-4 h-4" />

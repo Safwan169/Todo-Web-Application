@@ -34,3 +34,97 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+```
+todo
+├─ app
+│  ├─ (auth)
+│  │  ├─ login
+│  │  │  └─ page.tsx
+│  │  └─ signup
+│  │     └─ page.tsx
+│  ├─ (protected)
+│  │  ├─ layout.tsx
+│  │  ├─ profile
+│  │  │  └─ page.tsx
+│  │  └─ todo
+│  │     ├─ components
+│  │     │  ├─ TodoCard.tsx
+│  │     │  ├─ TodoEmptyState.tsx
+│  │     │  ├─ TodoFilter.tsx
+│  │     │  ├─ TodoForm.tsx
+│  │     │  ├─ TodoHeader.tsx
+│  │     │  ├─ TodoList.tsx
+│  │     │  └─ TodoSearch.tsx
+│  │     └─ page.tsx
+│  ├─ favicon.ico
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  └─ page.tsx
+├─ components
+│  ├─ common
+│  │  └─ EmptyState.tsx
+│  ├─ layout
+│  │  ├─ Navbar.tsx
+│  │  └─ Sidebar.tsx
+│  └─ ui
+│     ├─ button.tsx
+│     ├─ card.tsx
+│     ├─ input.tsx
+│     ├─ modal.tsx
+│     └─ spinner.tsx
+├─ context
+│  └─ Context.tsx
+├─ eslint.config.mjs
+├─ hooks
+│  ├─ useAuth.ts
+│  ├─ useDragDrop.ts
+│  └─ useToast.ts
+├─ lib
+│  ├─ axios.ts
+│  ├─ constants.ts
+│  ├─ cookies.ts
+│  ├─ protectedRoutes.ts
+│  └─ utils.ts
+├─ modules
+│  ├─ auth
+│  │  ├─ api.ts
+│  │  ├─ hooks.ts
+│  │  ├─ type.ts
+│  │  ├─ utils.ts
+│  │  └─ validations.ts
+│  ├─ profile
+│  │  ├─ api.ts
+│  │  ├─ hooks.ts
+│  │  ├─ types.ts
+│  │  └─ validations.ts
+│  └─ todo
+│     ├─ api.ts
+│     ├─ hooks.ts
+│     ├─ types.ts
+│     └─ utils.ts
+├─ next.config.ts
+├─ package-lock.json
+├─ package.json
+├─ postcss.config.mjs
+├─ public
+│  ├─ file.svg
+│  ├─ globe.svg
+│  ├─ img.jpg
+│  ├─ login.png
+│  ├─ logo.png
+│  ├─ next.svg
+│  ├─ profile.png
+│  ├─ signUp.png
+│  ├─ vercel.svg
+│  └─ window.svg
+├─ README.md
+├─ services
+│  └─ storage.service.ts
+├─ tsconfig.json
+├─ types
+│  └─ global.d.ts
+└─ validations
+   └─ index.ts
+
+```

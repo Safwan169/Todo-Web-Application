@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LogOut, CheckSquare, UserCircle } from "lucide-react";
 import Image from "next/image";
+import { useProfile } from "@/modules/profile/hooks";
+import { useAuthContext } from "@/context/Context";
+import { useEffect } from "react";
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const route = useRouter()
 
     const menuItems = [
         {
@@ -21,19 +25,33 @@ export default function Sidebar() {
         },
     ];
 
+
+    const { data } = useProfile();
+    const { setUser } = useAuthContext();
+    useEffect(() => {
+        setUser(data);
+    }, [data]);
+
+    const handleLogout = () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        route.push("/login");
+        console.log("Logged out");
+    }
+
     return (
         <aside className="h-screen max-w-[305px] sticky left-0 top-0 bottom-0 w-full bg-[#0D224A] text-white flex flex-col pt-[60px] pb-[30px] z-50">
             {/* User section */}
             <div className="flex flex-col items-center mb-6">
-                <Image 
-                    width={86} 
+                <img
+                    width={86}
                     height={86}
-                    src="/img.jpg"
+                    src={data?.profile_image || '/profile.png'}
                     alt="User"
                     className="w-[86px] h-[86px] bg-cover rounded-full border-2 border-white"
                 />
-                <h2 className="text-[16px] font-semibold mt-3">amanuel</h2>
-                <p className="text-xs font-normal text-gray-300">amanuel@gmail.com</p>
+                <h2 className="text-[16px] font-semibold mt-3">{data?.first_name + " " + data?.last_name}</h2>
+                <p className="text-xs font-normal text-gray-300">{data?.email}</p>
             </div>
 
             {/* Navigation */}
@@ -57,7 +75,7 @@ export default function Sidebar() {
 
             {/* Logout */}
             <div className="mt-6">
-                <button className="flex group items-center px-10 gap-3 w-full cursor-pointer py-3 transition-all hover:bg-gradient-to-r from-[#1d3473] to-[#0e224a]">
+                <button onClick={handleLogout} className="flex group items-center px-10 gap-3 w-full cursor-pointer py-3 transition-all hover:bg-gradient-to-r from-[#1d3473] to-[#0e224a]">
                     <LogOut className="group-hover:scale-110" size={18} />
                     Logout
                 </button>

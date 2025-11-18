@@ -1,5 +1,7 @@
 import { Edit2, GripVertical, MoreVertical, Trash2 } from "lucide-react";
 
+import { TaskCardProps } from "@/modules/todo/types";
+
 export default function TaskCard({ task, onEdit, onDelete ,isDragging}: TaskCardProps) {
 const priorityConfig = {
     extreme: {
@@ -71,27 +73,28 @@ const priorityConfig = {
       <div className="flex items-center justify-between">
         {/* Due Date */}
         <span className="text-sm text-placeholder">
-          Due {formatDate(task.dueDate)}
+          Due {formatDate(task.todo_date)}
         </span>
 
         {/* Action Buttons */}
         <div className="flex  items-center gap-2">
           <button
             onClick={() => onEdit(task)}
-            className="p-2 bg-[#eef7ff] hover:bg-blue-50  rounded-lg transition-colors group"
+            className="p-2 bg-[#eef7ff] hover:bg-blue-50  rounded-lg transition-colors cursor-pointer group"
             aria-label="Edit task"
           >
             <Edit2 className="w-4 h-4 text-blue-600" />
           </button>
           <button
             onClick={() => onDelete(task.id)}
-            className="p-2 bg-[#eef7ff] hover:bg-red-50 rounded-lg transition-colors group"
+            className="p-2 bg-[#eef7ff] hover:bg-red-50 rounded-lg transition-colors cursor-pointer group"
             aria-label="Delete task"
           >
             <Trash2 className="w-4 h-4 text-red-600" />
           </button>
         </div>
       </div>
+
     </div>
   );
 }

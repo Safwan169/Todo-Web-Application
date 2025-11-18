@@ -3,20 +3,21 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginSchema, LoginSchema } from "@/modules/auth/validations";
 import { useRouter } from "next/navigation";
 import { useLogin } from "@/modules/auth/hooks";
-import { setToken } from "@/lib/cookies";
+import { showToast } from "@/lib/toast";
+import { useAuthContext } from "@/context/Context";
 
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { mutate: login, isPending } = useLogin();
+  const { setUser } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -26,16 +27,42 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginSchema) => {
-
     login(data, {
-      onSuccess: (response: any) => {
+      onSuccess: async (response: any) => {
         console.log(response, 'response login');
         localStorage.setItem("access_token", response.access);
         localStorage.setItem("refresh_token", response.refresh);
-        router.push("/profile");
+        
+        if (response.user) {
+          localStorage.setItem("user", JSON.stringify(response.user));
+          setUser(response.user);
+        } else {
+          try {
+            const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/`, {
+              headers: {
+                'Authorization': `Bearer ${response.access}`
+              }
+            });
+            if (profileRes.ok) {
+              const userData = await profileRes.json();
+              localStorage.setItem("user", JSON.stringify(userData));
+              setUser(userData);
+            }
+          } catch (e) {
+            console.error('Error fetching user profile:', e);
+          }
+        }
+        
+        showToast.success("Welcome back to your dashboard");
+        setTimeout(() => {
+          router.push("/todo");
+        }, 300);
+      },
+      onError: (error: any) => {
+        const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Login failed. Please try again.";
+        showToast.error(errorMessage);
       },
     });
-
   };
 
   return (
@@ -133,7 +160,7 @@ export default function LoginPage() {
             {/* BUTTON */}
             <button
               type="submit"
-              className="w-full py-3 bg-primary hover:bg-[#3A67E8] transition text-white rounded-md font-medium mt-2"
+              className="w-full cursor-pointer py-3 bg-primary hover:bg-[#3A67E8] transition text-white rounded-md font-medium mt-2"
             >
               Log In
             </button>

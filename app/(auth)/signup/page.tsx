@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSignup } from "@/modules/auth/hooks";
 import Button from "@/components/ui/button";
+import { showToast } from "@/lib/toast";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +29,14 @@ export default function SignupPage() {
     console.log("FORM SUBMITTED:", data);
      signup(data, {
       onSuccess: () => {
-        router.push("/login");
+        showToast.success("Account created successfully");
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
+      },
+      onError: (error: any) => {
+        const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Registration failed. Please try again.";
+        showToast.error(errorMessage);
       },
     });
 

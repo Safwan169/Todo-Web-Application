@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -18,38 +18,17 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        
-        const refreshToken = localStorage.getItem("refresh_token");
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/token/refresh/`,
-          { refresh: refreshToken }
-        );
-
-        const newAccessToken = response.data.access;
-        localStorage.setItem("access_token", newAccessToken);
-
-  
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-      
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/signup') {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
-        return Promise.reject(refreshError);
+        localStorage.removeItem("user");
+        window.location.href = '/login';
       }
     }
-
     return Promise.reject(error);
   }
 );

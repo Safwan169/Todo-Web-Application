@@ -5,6 +5,7 @@ import TodoSearch from './components/TodoSearch';
 import TodoFilter from './components/TodoFilter';
 import TodoEmptyState from './components/TodoEmptyState';
 import { TaskList } from './components/TodoCard';
+import { useAuthContext } from '@/context/Context';
 
 
 export default function TodoPage() {
@@ -17,7 +18,8 @@ export default function TodoPage() {
   ]);
 
 
-  const todos = []; 
+
+  const {todoList}=useAuthContext()
 
   const handleNewTask = () => {
     
@@ -57,11 +59,11 @@ export default function TodoPage() {
 
         {/* Content Area */}
         <div className=" min-h-[500px] ">
-          {todos.length === 1 ? (
+          {todoList.length === 0 ? (
             <TodoEmptyState />
           ) : (
             <div className='bg-transparent'>
-           <TaskList/>
+           <TaskList data={todoList}/>
             </div>
           )}
         </div>

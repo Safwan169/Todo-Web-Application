@@ -1,11 +1,13 @@
-// app/(protected)/layout.tsx
-
+'use client'
 import Sidebar from "@/components/layout/Sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
+import { useAuthContext } from "@/context/Context";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +34,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+    const { user, loading } = useAuthContext();
+    const router = useRouter();
+
+    useEffect(() => {
+      if (!loading) {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+       
+        if (!token) {
+          router.replace('/login');
+        }
+      }
+    }, [loading, router]);
   return (
     <div className="flex">
       <Sidebar />
