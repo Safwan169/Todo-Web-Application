@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useLogin } from "@/modules/auth/hooks";
 import { showToast } from "@/lib/toast";
 import { useAuthContext } from "@/context/Context";
+import Button from "@/components/ui/button";
 
 
 export default function LoginPage() {
@@ -158,12 +159,13 @@ export default function LoginPage() {
             </div>
 
             {/* BUTTON */}
-            <button
+            <Button
+            loading={isPending}
               type="submit"
               className="w-full cursor-pointer py-3 bg-primary hover:bg-[#3A67E8] transition text-white rounded-md font-medium mt-2"
             >
               Log In
-            </button>
+            </Button>
 
             {/* SIGNUP LINK */}
             <p className="text-center text-gray-600 mt-3">
