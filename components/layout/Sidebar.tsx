@@ -40,7 +40,7 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className="h-screen lg:max-w-[280px] 2xl:max-w-[340px] sticky left-0 top-0 bottom-0 w-full bg-[#0D224A] text-white flex flex-col pt-[60px] pb-[30px] z-50">
+        <aside className="h-screen lg:max-w-[300px] 2xl:max-w-[340px] sticky left-0 top-0 bottom-0 w-full bg-[#0D224A] text-white flex flex-col pt-[60px] pb-[30px] z-50">
             {/* User section */}
             <div className="flex flex-col items-center mb-6">
                 <img

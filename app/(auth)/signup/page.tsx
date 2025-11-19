@@ -48,13 +48,13 @@ export default function SignupPage() {
 
       {/* LEFT Image */}
       <div className="hidden lg:flex items-center w-[40%] justify-center bg-[#e2ecf8]">
-        <div className="w-[80%]">
+        <div className="  ">
           <Image
-            src="/signUp.png"
+            src="/signup.png"
             width={600}
             height={600}
             alt="Signup Image"
-            className="w-full h-auto"
+            className="w-full h-screen object-contain"
           />
         </div>
       </div>

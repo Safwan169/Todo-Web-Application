@@ -73,11 +73,11 @@ export default function LoginPage() {
       <div className="hidden lg:flex w-[40%] items-center justify-center bg-secondary">
         <div className="w-[80%]">
           <Image
-            src="/login.png"
+            src="/loginImage.png"
             width={600}
             height={600}
             alt="Login Image"
-            className="w-full h-auto"
+            className="w-full object-contain h-auto"
           />
         </div>
       </div>
