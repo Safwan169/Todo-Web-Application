@@ -41,7 +41,7 @@ const priorityConfig = {
 
   return (
     <div
-      className={`bg-white rounded-xl border-[1.5px] max-w-[348px] ${config.borderColor} p-5 hover:shadow-md transition-all cursor-move ${
+      className={`bg-white rounded-xl border-[1.5px] min-w-[280px] max-w-[348px] ${config.borderColor} p-5 hover:shadow-md transition-all cursor-move ${
         isDragging ? 'opacity-50 scale-95' : 'opacity-100'
       }`}
     >

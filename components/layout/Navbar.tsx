@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 export default function Navbar() {
     return (
-        <nav className="bg-tertiary  border-b w-full h-[88px]  border-gray-100">
-            <div className="flex items-center w-full border h-[88px] justify-between px-[50.5px] py-7">
+        <nav className="bg-tertiary  border-b w-full xl:h-[88px] lg:h-20 border-gray-100">
+            <div className="flex items-center w-full  h-[88px] justify-between px-[50.5px] py-7">
                 {/* Logo Section */}
                 <div className="flex items-center gap-3">
                     <Image src={'/logo.png'} height={100} width={100} alt='Dreamy Software' />

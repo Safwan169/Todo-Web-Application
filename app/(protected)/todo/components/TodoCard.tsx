@@ -97,7 +97,7 @@ export const TaskList: React.FC<any> = ({ data }) => {
 
       await updateTodo({ id: editingTask.id, data: fd });
 
-      showToast.success("Updated");
+      showToast.success("Updated Todo successfully");
       setIsModalOpen(false);
       setEditingTask(null);
     } catch {
@@ -111,7 +111,7 @@ export const TaskList: React.FC<any> = ({ data }) => {
 
     try {
       await deleteTodo(taskToDelete);
-      showToast.success("Deleted");
+      showToast.success("Deleted Todo successfully");
       setDeleteConfirmOpen(false);
       setTaskToDelete(null);
     } catch {
@@ -152,7 +152,7 @@ export const TaskList: React.FC<any> = ({ data }) => {
         message="Are you sure you want to delete this task? This action cannot be undone."
       />
 
-      <h2 className="text-2xl font-bold mb-6">Your Tasks</h2>
+      <h2 className="text-[18px]  text-[#0C0C0C] font-bold mb-6">Your Tasks</h2>
 
       <div className="flex flex-wrap gap-4">
         {tasks.map((task, index) => (
